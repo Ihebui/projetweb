@@ -1,0 +1,118 @@
+:root {
+	--dark: #374151;
+	--darker: #1F2937;
+	--darkest: #111827;
+	--grey: #6B7280;
+	--light: #EEE;
+    --lightpurple: #5680E9;
+    --lightblue: #84CEEB;
+    --blue: #5AB9EA;
+    --lighterblue: #C1C8E4;
+    --purple: #8860D0;
+	--purple2: #49356d;
+}
+
+body {
+  margin: 0;
+  justify-content: center;
+  flex-direction: column;
+  overflow: auto;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 12px;
+  background-image: url(img/background.png);
+}
+
+.container {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  width: 80%;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%,-50%);
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-image: linear-gradient(to left, var(--purple), var(--dark));
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  padding: 10px;
+  width: 30%;
+  min-height: max-content;
+  margin: 20px;
+}
+
+.section-header {
+  color: var(--lightblue);
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-bottom: 10px;
+  background-image: linear-gradient(to right, var(--light), var(--lighterblue));
+    -webkit-background-clip: text;
+            background-clip: text;
+	-webkit-text-fill-color: transparent;
+}
+
+.task-list {
+  min-height: max-content;
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  background-color: var(--lighterblue);
+  overflow-y: auto;
+}
+
+.task {
+  background-image: linear-gradient(to left, var(--purple), var(--dark));
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  padding: 10px;
+  margin-bottom: 10px;
+  cursor: move;
+  color: var(--light);
+}
+
+.hh {
+  position: absolute;
+  left: 50%;
+  top: 5%;
+  transform: translate(-50%,-50%);
+}
+
+.my-input {
+  border: 2px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
+    font-size: 16px;
+    width: 300px;
+    box-sizing: border-box;
+    transition: border-color 0.2s ease-in-out;
+}
+
+.my-input:focus {
+    outline: none;
+    border-color: #007bff;
+}
+
+.my-button {
+  background-color: #735fd1;
+    border: none;
+    color: white;
+    padding: 12px 24px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.my-button:hover {
+  background-color: #7981e0;
+}

@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Task Board</title>
+	<style>
+		:root {
+	--dark: #374151;
+	--darker: #1F2937;
+	--darkest: #111827;
+	--grey: #6B7280;
+	--light: #EEE;
+    --lightpurple: #5680E9;
+    --lightblue: #84CEEB;
+    --blue: #5AB9EA;
+    --lighterblue: #C1C8E4;
+    --purple: #8860D0;
+	--purple2: #49356d;
+}
+
+body {
+  margin: 0;
+  justify-content: center;
+  flex-direction: column;
+  overflow: auto;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 12px;
+  background-image: url(img/background.png);
+}
+
+.container {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  width: 80%;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%,-50%);
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-image: linear-gradient(to left, var(--purple), var(--dark));
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  padding: 10px;
+  width: 30%;
+  min-height: max-content;
+  margin: 20px;
+}
+
+.section-header {
+  color: var(--lightblue);
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-bottom: 10px;
+  background-image: linear-gradient(to right, var(--light), var(--lighterblue));
+    -webkit-background-clip: text;
+            background-clip: text;
+	-webkit-text-fill-color: transparent;
+}
+
+.task-list {
+  min-height: max-content;
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  background-color: var(--lighterblue);
+  overflow-y: auto;
+}
+
+.task {
+  background-image: linear-gradient(to left, var(--purple), var(--dark));
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  padding: 10px;
+  margin-bottom: 10px;
+  cursor: move;
+  color: var(--light);
+}
+
+.hh {
+  position: absolute;
+  left: 50%;
+  top: 5%;
+  transform: translate(-50%,-50%);
+}
+
+.input {
+  border: 2px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
+    font-size: 16px;
+    width: 300px;
+    box-sizing: border-box;
+    transition: border-color 0.2s ease-in-out;
+}
+
+.input:focus {
+    outline: none;
+    border-color: #007bff;
+}
+
+.my-button {
+  background-color: #735fd1;
+    border: none;
+    color: white;
+    padding: 12px 24px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.my-button:hover {
+  background-color: #7981e0;
+}
+	</style>
+</head>
+<body>
+    <div>
+        <input class ="my-input" id="new-task-input" type="text" placeholder="Add new task">
+        <button id="add-task-button">Add</button>
+      </div>
+      
+	<div class="container">
+		<div class="section">
+			<div class="section-header">To Do</div>
+			<ul id="todo" class="task-list">
+				<li draggable="true" class="task">Task 1</li>
+				<li draggable="true" class="task">Task 2</li>
+				<li draggable="true" class="task">Task 3</li>
+			</ul>
+		</div>
+		<div class="section">
+			<div class="section-header">In Progress</div>
+			<ul class="task-list">
+			</ul>
+		</div>
+		<div class="section">
+			<div class="section-header">Done</div>
+			<ul class="task-list">
+			</ul>
+		</div>
+	</div>
+    <script>
+		const tasks = document.querySelectorAll('.task');
+const sections = document.querySelectorAll('.section');
+
+let currentTask = null;
+
+tasks.forEach(task => {
+    task.addEventListener('dragstart', () => {
+      currentTask = task;
+      setTimeout(() => {
+        task.style.display = 'none';
+        currentTask.classList.add('dragging'); // Add the .dragging class to the currentTask
+      }, 0);
+    });
+  
+    task.addEventListener('dragend', () => {
+      currentTask.style.display = 'block';
+      currentTask.classList.remove('dragging'); // Remove the .dragging class from the currentTask
+      currentTask = null;
+    });
+  });
+  
+
+sections.forEach(section => {
+    section.addEventListener('dragover', e => {
+      e.preventDefault();
+      const afterElement = getDragAfterElement(section, e.clientY);
+      const draggable = document.querySelector('.dragging');
+      if (afterElement == null) {
+        section.querySelector('.task-list').appendChild(draggable);
+      } else {
+        section.querySelector('.task-list').insertBefore(draggable, afterElement);
+      }
+    });
+  
+    section.addEventListener('dragenter', e => {
+      e.preventDefault();
+    });
+  
+    section.addEventListener('drop', e => {
+      e.preventDefault();
+      const draggable = document.querySelector('.dragging');
+      section.querySelector('.task-list').appendChild(draggable);
+    });
+  });
+  
+
+function getDragAfterElement(section, y) {
+  const draggableElements = [...section.querySelectorAll('.task:not(.dragging)')];
+
+  return draggableElements.reduce((closest, child) => {
+    const box = child.getBoundingClientRect();
+    const offset = y - box.top - box.height / 2;
+    if (offset < 0 && offset > closest.offset) {
+      return { offset: offset, element: child };
+    } else {
+      return closest;
+    }
+  }, { offset: Number.NEGATIVE_INFINITY }).element;
+}
+
+const todo = document.querySelector("#todo");
+
+const addTaskButton = document.getElementById('add-task-button');
+addTaskButton.addEventListener('click', function() {
+    const newTaskInput = document.getElementById('new-task-input');
+    const newTaskText = newTaskInput.value;
+    const task_el = document.createElement('li');
+    task_el.classList.add('task');
+    task_el.textContent = newTaskText;
+    task_el.setAttribute('draggable', true);
+
+    task_el.addEventListener('dragstart', () => {
+      currentTask = task_el;
+      setTimeout(() => {
+        task_el.style.display = 'none';
+        currentTask.classList.add('dragging');
+      }, 0);
+    });
+  
+    task_el.addEventListener('dragend', () => {
+      currentTask.style.display = 'block';
+      currentTask.classList.remove('dragging');
+      currentTask = null;
+    });
+
+    task_el.addEventListener('dragover', e => {
+      e.preventDefault();
+      const afterElement = getDragAfterElement(section, e.clientY);
+      const draggable = document.querySelector('.dragging');
+      if (afterElement == null) {
+        section.querySelector('.task-list').appendChild(draggable);
+      } else {
+        section.querySelector('.task-list').insertBefore(draggable, afterElement);
+      }
+    });
+  
+    task_el.addEventListener('dragenter', e => {
+      e.preventDefault();
+    });
+  
+    task_el.addEventListener('drop', e => {
+      e.preventDefault();
+      const draggable = document.querySelector('.dragging');
+      section.querySelector('.task-list').appendChild(draggable);
+    });
+
+    todo.appendChild(task_el);
+    newTaskInput.value = '';
+});
+
+/*
+    addTaskButton.addEventListener('click', function() {
+    const newTaskInput = document.getElementById('new-task-input');
+    const newTaskText = newTaskInput.value;
+    const task_el = document.createElement('li');
+    task_el.classList.add('task');
+    task_el.textContent = newTaskText;
+    task_el.setAttribute('draggable', true);
+
+    task_el.addEventListener('dragstart', () => {
+      currentTask = task_el;
+      setTimeout(() => {
+        task_el.style.display = 'none';
+        currentTask.classList.add('dragging');
+      }, 0);
+    });
+  
+    task_el.addEventListener('dragend', () => {
+      currentTask.style.display = 'block';
+      currentTask.classList.remove('dragging');
+      currentTask = null;
+    });
+
+    task_el.addEventListener('dragover', e => {
+      e.preventDefault();
+      const afterElement = getDragAfterElement(section, e.clientY);
+      const draggable = document.querySelector('.dragging');
+      if (afterElement == null) {
+        section.querySelector('.task-list').appendChild(draggable);
+      } else {
+        section.querySelector('.task-list').insertBefore(draggable, afterElement);
+      }
+    });
+  
+    task_el.addEventListener('dragenter', e => {
+      e.preventDefault();
+    });
+  
+    task_el.addEventListener('drop', e => {
+      e.preventDefault();
+      const draggable = document.querySelector('.dragging');
+      section.querySelector('.task-list').appendChild(draggable);
+    });
+
+    todo.appendChild(task_el);
+    newTaskInput.value = '';
+});
+*/
+
+
+	</script>
+</body>
+</html>
