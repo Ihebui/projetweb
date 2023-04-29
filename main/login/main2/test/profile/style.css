@@ -1,5 +1,6 @@
 .main {
     display: flex;
+    background-image : url(img/background.png);
 }
 
 body {
@@ -11,7 +12,7 @@ body {
     height: 789px;
     border-right: 1px solid #e3e7f7;
     position: relative;
-    background: #d1b663;
+    background: linear-gradient(#6693F5, #000000);
 }
 
 .profile-pic{
