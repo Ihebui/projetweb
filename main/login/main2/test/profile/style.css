@@ -12,7 +12,7 @@ body {
     height: 789px;
     border-right: 1px solid #e3e7f7;
     position: relative;
-    background: linear-gradient(#6693F5, #000000);
+    background: linear-gradient(#1c1cb933, #ffffff00)
 }
 
 .profile-pic{
