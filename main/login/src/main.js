@@ -75,37 +75,62 @@ document.addEventListener("DOMContentLoaded", () => {
       createAccountForm.addEventListener("submit", e => {
         e.preventDefault();
     
-        // Perform your AJAX/Fetch signup
+        // Get form inputs
         const nameInput = createAccountForm.querySelector('[placeholder="Full Name"]');
         const usernameInput = createAccountForm.querySelector('#signupUsername');
-        const emailInput = createAccountForm.querySelector('[placeholder="Email Address"]');
         const phoneInput = createAccountForm.querySelector('[placeholder="Phone Number"]');
+        const emailInput = createAccountForm.querySelector('[placeholder="Email Address"]');
         const passwordInput = createAccountForm.querySelector('[placeholder="Password"]');
         const confirmPasswordInput = createAccountForm.querySelector('[placeholder="Confirm password"]');
-        const name = nameInput.value;
-        const username = usernameInput.value;
-        const email = emailInput.value;
-        const phone = phoneInput.value;
+    
+        // Get input values
+        const name = nameInput.value.trim();
+        const username = usernameInput.value.trim();
+        const phone = phoneInput.value.trim();
+        const email = emailInput.value.trim();
         const password = passwordInput.value;
         const confirmPassword = confirmPasswordInput.value;
+        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    
+        // Validate inputs
+        if (!name || !username || !phone || !email || !password || !confirmPassword) {
+            setFormMessage(createAccountForm, "error", "Please fill in all fields.");
+            return;
+        }
+        if (name.length < 4 ) {
+            setFormMessage(createAccountForm, "error", "Name must consist of at least four letters.");
+            return;
+        }
+        if (username.length < 4 ) {
+            setFormMessage(createAccountForm, "error", "Username must consist of at least four letters.");
+            return;
+        }
+        if (!emailPattern.test(email)) {
+            setFormMessage(createAccountForm, "error", "Invalid email address.");
+            return;
+        }
+        if (phone.length < 8 ) {
+            setFormMessage(createAccountForm, "error", "Invalid phone number.");
+            return;
+        }
+        if (password.length < 8 || !/\d/.test(password) || !/[A-Z]/.test(password)) {
+            setFormMessage(createAccountForm, "error", "Password must be at least 8 characters and contain a number and an uppercase letter.");
+            return;
+        }
+        if (password !== confirmPassword) {
+            setFormMessage(createAccountForm, "error", "Passwords do not match.");
+            return;
+        }
     
         // Save signup info to local storage
         saveSignupInfo(name, username, email, phone, password);
     
-        setFormMessage(createAccountForm, "success", "successful login");
+        // Show success message
+        setFormMessage(createAccountForm, "success", "Signup successful.");
+
+        // Redirect to LOGIN FORM
+        window.location.href = "index.html";
     });
     
     
-
-    document.querySelectorAll(".form__input").forEach(inputElement => {
-        inputElement.addEventListener("blur", e => {
-            if (e.target.id === "signupUsername" && e.target.value.length > 0 && e.target.value.length < 10) {
-                setInputError(inputElement, "Username must be at least 10 characters in length");
-            }
-        });
-
-        inputElement.addEventListener("input", e => {
-            clearInputError(inputElement);
-        });
-    });
 });
