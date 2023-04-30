@@ -46,7 +46,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const savedPassword = localStorage.getItem('password');
     
         // Get the entered login info from the form
-        const usernameInput = loginForm.querySelector('[placeholder="Username or email"]');
+        const usernameInput = loginForm.querySelector('[placeholder="email"]');
         const passwordInput = loginForm.querySelector('[placeholder="Password"]');
         const enteredemail = usernameInput.value;
         const enteredPassword = passwordInput.value;
